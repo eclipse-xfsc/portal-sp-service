@@ -1,0 +1,42 @@
+server.port: 8092
+
+spring.mvc.pathmatch.matching-strategy: ANT_PATH_MATCHER
+spring.mvc.throw-exception-if-no-handler-found: true
+spring.main.allow-circular-references: true
+
+# Demo - generic external call
+services.demo.uri.internal: http://gaia-x.demo.local:8081/demo
+
+springfox:
+  documentation:
+    swaggerUi:
+      baseUrl: /api/sp-service
+    openApi:
+      v3:
+        path: /api/sp-service/v3/api-docs
+    swagger:
+      v2:
+        path: /api/sp-service/v2/api-docs
+
+# KEYCLOAK-------------------------------------------
+keycloak.auth-server-url: ${KC_URL}
+keycloak.realm: ${KC_REALM}
+keycloak.resource: ${KC_RESOURCE}
+keycloak.public-client: true
+keycloak.bearer-only: true
+keycloak.principal-attribute: preferred_username
+
+check-keycloak-token: true
+---
+spring.config.activate.on-profile: mesh
+server.port: 80
+server.shutdown: graceful
+spring.lifecycle.timeout-per-shutdown-phase: 10s
+management.endpoint.health.probes.enabled: true
+management.endpoints.web.exposure.include: "*"
+management.server.port: 4004
+
+services:
+  demo:
+    uri:
+      internal: http://demo/demo
